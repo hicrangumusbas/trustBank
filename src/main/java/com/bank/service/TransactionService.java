@@ -37,12 +37,7 @@ public class TransactionService {
         if (Objects.isNull(bankId) || Objects.isNull(accountType) || Objects.isNull(filterValue)) return null;
 
         Account account = accountService.getAccount(bankId, accountType, filterValue);
-        if (!Objects.isNull(account)) {
-            synchronized (account) {
-                account = accountRepository.getById(account.getId());
-                return transaction(account, amount, true);
-            }
-        }
+        if (!Objects.isNull(account)) return transaction(account, amount, true);
         return null;
     }
 
@@ -54,10 +49,7 @@ public class TransactionService {
             if (account.getBalance() < amount)
                 throw new ArithmeticException("There is not enough money in your account.");
 
-            synchronized (account) {
-                account = accountRepository.getById(account.getId());
-                return transaction(account, amount, false);
-            }
+            return transaction(account, amount, false);
         }
         return null;
     }
@@ -72,9 +64,10 @@ public class TransactionService {
         transactionRepository.save(transaction);
 
         synchronized (account) {
+            account = accountRepository.getById(account.getId());
             if (deposit) account.setBalance(account.getBalance() + amount);
             else account.setBalance(account.getBalance() - amount);
-            return accountRepository.save(account);
         }
+        return accountRepository.save(account);
     }
 }

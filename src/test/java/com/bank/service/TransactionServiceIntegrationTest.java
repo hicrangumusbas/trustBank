@@ -105,6 +105,7 @@ public class TransactionServiceIntegrationTest {
         CompletableFuture<Void> allOf = CompletableFuture.allOf(futures.toArray(new CompletableFuture[0]));
         allOf.get();
     }
+
     @Test
     @DirtiesContext
     void depositMoneyTestAsync() throws InterruptedException {
