@@ -2,7 +2,7 @@ package com.bank.controller;
 
 import com.bank.entities.Account;
 import com.bank.enumeration.AccountFilterType;
-import com.bank.service.AccountService;
+import com.bank.service.IAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +16,7 @@ import java.util.Objects;
 public class AccountController {
 
     @Autowired
-    private AccountService accountService;
+    private IAccountService accountService;
 
     @GetMapping("/account")
     public ResponseEntity<?> getAccount(@RequestParam Long bankId, @RequestParam String accountType, @RequestParam Long filterValue) {

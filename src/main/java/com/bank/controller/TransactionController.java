@@ -4,7 +4,7 @@ import com.bank.entities.Account;
 import com.bank.entities.Transaction;
 import com.bank.enumeration.AccountFilterType;
 import com.bank.enumeration.TransactionType;
-import com.bank.service.TransactionService;
+import com.bank.service.ITransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +18,7 @@ import java.util.Objects;
 public class TransactionController {
 
     @Autowired
-    private TransactionService transactionService;
+    private ITransactionService transactionService;
 
     @GetMapping("/transaction-history")
     public ResponseEntity<List<Transaction>> transactionHistory(@RequestParam String transactionType, @RequestParam Long filterValue) {

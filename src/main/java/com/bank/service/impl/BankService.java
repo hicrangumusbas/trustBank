@@ -1,7 +1,8 @@
-package com.bank.service;
+package com.bank.service.impl;
 
 import com.bank.entities.Bank;
 import com.bank.repository.BankRepository;
+import com.bank.service.IBankService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -9,16 +10,12 @@ import java.util.List;
 import java.util.Objects;
 
 @Service
-public class BankService {
+public class BankService implements IBankService {
 
     @Autowired
     private BankRepository bankRepository;
 
-    @Autowired
-    public BankService(BankRepository bankRepository) {
-        this.bankRepository = bankRepository;
-    }
-
+    @Override
     public Bank createBank(Bank bank) {
         if (Objects.isNull(bank.getName()) || Objects.isNull(bank.getCountryCode())) return null;
 
@@ -30,10 +27,12 @@ public class BankService {
         return bankRepository.save(updateBank);
     }
 
+    @Override
     public List<Bank> getAllBanks() {
         return bankRepository.findAll();
     }
 
+    @Override
     public Bank getBank(String bankName) {
         return bankRepository.findByBank(bankName);
     }

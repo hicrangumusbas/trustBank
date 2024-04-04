@@ -1,7 +1,8 @@
 package com.bank.controller;
 
 import com.bank.entities.AccountOwner;
-import com.bank.service.AccountOwnerService;
+import com.bank.service.IAccountOwnerService;
+import com.bank.service.impl.AccountOwnerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +16,7 @@ import java.util.Objects;
 public class OwnerController {
 
     @Autowired
-    private AccountOwnerService accountOwnerService;
+    private IAccountOwnerService accountOwnerService;
 
     @GetMapping("/account-owner")
     public ResponseEntity<?> getOwnerAccount(@RequestParam Long identificationNumber) {

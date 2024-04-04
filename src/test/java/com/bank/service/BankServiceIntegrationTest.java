@@ -15,7 +15,7 @@ import java.util.List;
 class BankServiceIntegrationTest {
 
     @Autowired
-    private BankService bankService;
+    private IBankService bankService;
 
     @Test
     @DirtiesContext

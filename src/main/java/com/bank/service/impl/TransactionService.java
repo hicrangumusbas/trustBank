@@ -1,4 +1,4 @@
-package com.bank.service;
+package com.bank.service.impl;
 
 import com.bank.entities.Account;
 import com.bank.entities.Transaction;
@@ -6,6 +6,8 @@ import com.bank.enumeration.AccountFilterType;
 import com.bank.enumeration.TransactionType;
 import com.bank.repository.AccountRepository;
 import com.bank.repository.TransactionRepository;
+import com.bank.service.IAccountService;
+import com.bank.service.ITransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,7 +17,7 @@ import java.util.Objects;
 
 @Service
 @Transactional
-public class TransactionService {
+public class TransactionService implements ITransactionService {
 
     @Autowired
     private TransactionRepository transactionRepository;
@@ -24,8 +26,9 @@ public class TransactionService {
     private AccountRepository accountRepository;
 
     @Autowired
-    private AccountService accountService;
+    private IAccountService accountService;
 
+    @Override
     public List<Transaction> getTransactionHistory(TransactionType type, Long accountNumber) {
         if (Objects.isNull(accountNumber)) return null;
 
@@ -33,6 +36,7 @@ public class TransactionService {
         return transactionRepository.findByAccountNumber(typeValue, accountNumber);
     }
 
+    @Override
     public Account depositMoney(Long bankId, AccountFilterType accountType, Long filterValue, double amount) {
         if (Objects.isNull(bankId) || Objects.isNull(accountType) || Objects.isNull(filterValue)) return null;
 
@@ -41,6 +45,7 @@ public class TransactionService {
         return null;
     }
 
+    @Override
     public Account withdrawMoney(Long bankId, AccountFilterType accountType, Long filterValue, double amount) {
         if (Objects.isNull(bankId) || Objects.isNull(accountType) || Objects.isNull(filterValue)) return null;
 

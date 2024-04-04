@@ -1,7 +1,8 @@
-package com.bank.service;
+package com.bank.service.impl;
 
 import com.bank.entities.AccountOwner;
 import com.bank.repository.AccountOwnerRepository;
+import com.bank.service.IAccountOwnerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -9,26 +10,24 @@ import java.util.List;
 import java.util.Objects;
 
 @Service
-public class AccountOwnerService {
+public class AccountOwnerService implements IAccountOwnerService {
 
     @Autowired
     private AccountOwnerRepository accountOwnerRepository;
 
-    @Autowired
-    public AccountOwnerService(AccountOwnerRepository accountOwnerRepository) {
-        this.accountOwnerRepository = accountOwnerRepository;
-    }
-
+    @Override
     public AccountOwner getAccountOwner(Long identificationNumber) {
         if (Objects.isNull(identificationNumber)) return null;
 
         return accountOwnerRepository.findByAccountOwner(identificationNumber);
     }
 
+    @Override
     public List<AccountOwner> getAllAccountOwners() {
         return accountOwnerRepository.findAll();
     }
 
+    @Override
     public AccountOwner createAccountOwner(AccountOwner owner) {
         if (Objects.isNull(owner) || Objects.isNull(owner.getIdentificationNumber()) ||
                 Objects.isNull(owner.getFirstName()) || Objects.isNull(owner.getLastName()) ||

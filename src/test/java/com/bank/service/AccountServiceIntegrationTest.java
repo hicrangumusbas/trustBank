@@ -4,6 +4,8 @@ import com.bank.entities.Account;
 import com.bank.entities.Transaction;
 import com.bank.enumeration.AccountFilterType;
 import com.bank.enumeration.TransactionType;
+import com.bank.service.impl.AccountService;
+import com.bank.service.impl.TransactionService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,10 +19,10 @@ import java.util.Objects;
 class AccountServiceIntegrationTest {
 
     @Autowired
-    private AccountService accountService;
+    private IAccountService accountService;
 
     @Autowired
-    private TransactionService transactionService;
+    private ITransactionService transactionService;
 
     @Test
     @DirtiesContext

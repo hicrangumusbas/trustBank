@@ -1,6 +1,7 @@
 package com.bank.service;
 
 import com.bank.entities.AccountOwner;
+import com.bank.service.impl.AccountOwnerService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +14,7 @@ import java.util.List;
 public class AccountOwnerServiceIntegrationTest {
 
     @Autowired
-    private AccountOwnerService accountOwnerService;
+    private IAccountOwnerService accountOwnerService;
 
     @Test
     @DirtiesContext

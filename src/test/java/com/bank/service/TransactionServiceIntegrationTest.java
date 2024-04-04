@@ -4,6 +4,8 @@ import com.bank.entities.Account;
 import com.bank.entities.Transaction;
 import com.bank.enumeration.AccountFilterType;
 import com.bank.enumeration.TransactionType;
+import com.bank.service.impl.AccountService;
+import com.bank.service.impl.TransactionService;
 import com.bank.util.ConcurrentManager;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -18,10 +20,10 @@ import java.util.Objects;
 public class TransactionServiceIntegrationTest {
 
     @Autowired
-    private TransactionService transactionService;
+    private ITransactionService transactionService;
 
     @Autowired
-    private AccountService accountService;
+    private IAccountService accountService;
 
     @Test
     @DirtiesContext

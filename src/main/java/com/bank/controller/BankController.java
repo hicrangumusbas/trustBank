@@ -1,7 +1,7 @@
 package com.bank.controller;
 
 import com.bank.entities.Bank;
-import com.bank.service.BankService;
+import com.bank.service.IBankService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +15,7 @@ import java.util.Objects;
 public class BankController {
 
     @Autowired
-    private BankService bankService;
+    private IBankService bankService;
 
 
     @GetMapping("/banks")
