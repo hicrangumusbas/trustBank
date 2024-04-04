@@ -1,0 +1,446 @@
+{
+	"info": {
+		"_postman_id": "78309b27-d471-4206-ae2a-6442d83615bc",
+		"name": "trustBank",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "12989357"
+	},
+	"item": [
+		{
+			"name": "BankService",
+			"item": [
+				{
+					"name": "getAllBanks()",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/bankService/baks",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"bankService",
+								"baks"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "createBank()",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"TestBank\",\r\n    \"countryCode\": \"US\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/bankService/create-bank",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"bankService",
+								"create-bank"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "AccountService",
+			"item": [
+				{
+					"name": "getAllAccounts()",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/accountService/accounts",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"accountService",
+								"accounts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getAccount()",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/accountService/account?bankId=2&accountType=ACCOUNT_NUMBER&filterValue=12341236789",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"accountService",
+								"account"
+							],
+							"query": [
+								{
+									"key": "bankId",
+									"value": "2"
+								},
+								{
+									"key": "accountType",
+									"value": "ACCOUNT_NUMBER"
+								},
+								{
+									"key": "filterValue",
+									"value": "12341236789"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getOwnerAccounts()",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/accountService/owner-accounts?accountType=IDENTIFICATION_NUMBER&filterValue=10308145519",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"accountService",
+								"owner-accounts"
+							],
+							"query": [
+								{
+									"key": "accountType",
+									"value": "IDENTIFICATION_NUMBER"
+								},
+								{
+									"key": "filterValue",
+									"value": "10308145519"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "createAccount()",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"bankId\": 2,\r\n    \"accountNumber\": 12341236789,\r\n    \"identificationNumber\": 98712354321,\r\n    \"balance\": 1144.9\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/accountService/create-account",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"accountService",
+								"create-account"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "checkBalance()",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/accountService/balance?accountId=2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"accountService",
+								"balance"
+							],
+							"query": [
+								{
+									"key": "accountId",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "AccountOwnerService",
+			"item": [
+				{
+					"name": "getAccountOwner()",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/ownerService/account-owner?identificationNumber=10308145519",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"ownerService",
+								"account-owner"
+							],
+							"query": [
+								{
+									"key": "identificationNumber",
+									"value": "10308145519"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getAllAccountOwners()",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/ownerService/account-owners",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"ownerService",
+								"account-owners"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "createAccount()",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"identificationNumber\": 10304545519,\r\n    \"firstName\": \"Test\",\r\n    \"lastName\": \"Kullanıcı\",\r\n    \"contactNumber\": 5332339065,\r\n    \"mailAddress\": \"test@outlook.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/ownerService/account-owner/create-account-owner",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"ownerService",
+								"account-owner",
+								"create-account-owner"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "TransactionService",
+			"item": [
+				{
+					"name": "getTransactionHistory()",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/transactionService/transaction-history?transactionType=ALL&filterValue=9876543218",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"transactionService",
+								"transaction-history"
+							],
+							"query": [
+								{
+									"key": "transactionType",
+									"value": "ALL"
+								},
+								{
+									"key": "filterValue",
+									"value": "9876543218"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "depositMoney()",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/transactionService/deposit?bankId=1&accountType=IDENTIFICATION_NUMBER&filterValue=10308145519&amount=500.9",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"transactionService",
+								"deposit"
+							],
+							"query": [
+								{
+									"key": "bankId",
+									"value": "1"
+								},
+								{
+									"key": "accountType",
+									"value": "IDENTIFICATION_NUMBER"
+								},
+								{
+									"key": "filterValue",
+									"value": "10308145519"
+								},
+								{
+									"key": "amount",
+									"value": "500.9"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "withdrawMoney()",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/transactionService/withdraw?bankId=1&accountType=IDENTIFICATION_NUMBER&filterValue=10308145519&amount=500.9",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"transactionService",
+								"withdraw"
+							],
+							"query": [
+								{
+									"key": "bankId",
+									"value": "1"
+								},
+								{
+									"key": "accountType",
+									"value": "IDENTIFICATION_NUMBER"
+								},
+								{
+									"key": "filterValue",
+									"value": "10308145519"
+								},
+								{
+									"key": "amount",
+									"value": "500.9"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
