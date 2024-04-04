@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/api/owner")
@@ -17,7 +18,12 @@ public class OwnerController {
     private AccountOwnerService accountOwnerService;
 
     @GetMapping("/account-owner")
-    public ResponseEntity<AccountOwner> getOwnerAccount(@RequestParam Long identificationNumber) {
+    public ResponseEntity<?> getOwnerAccount(@RequestParam Long identificationNumber) {
+        if (Objects.isNull(identificationNumber)) {
+            String errorMessage = "Identification Number must not be null.";
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessage);
+        }
+        
         AccountOwner account = accountOwnerService.getAccountOwner(identificationNumber);
         return new ResponseEntity<>(account, HttpStatus.OK);
     }
@@ -29,8 +35,16 @@ public class OwnerController {
     }
 
     @PostMapping("/create-account-owner")
-    public ResponseEntity<AccountOwner> createAccountOwner(@RequestBody AccountOwner accountOwner) {
-        AccountOwner createdAccount = accountOwnerService.createAccountOwner(accountOwner);
+    public ResponseEntity<?> createAccountOwner(@RequestBody AccountOwner owner) {
+        if (Objects.isNull(owner) || Objects.isNull(owner.getIdentificationNumber()) ||
+                Objects.isNull(owner.getFirstName()) || Objects.isNull(owner.getLastName()) ||
+                Objects.isNull(owner.getContactNumber())) {
+
+            String errorMessage = "Identification Number, First Name, Last Name, and Contact Number must not be null.";
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessage);
+        }
+
+        AccountOwner createdAccount = accountOwnerService.createAccountOwner(owner);
         return new ResponseEntity<>(createdAccount, HttpStatus.CREATED);
     }
 }

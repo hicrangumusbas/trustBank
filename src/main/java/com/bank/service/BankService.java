@@ -6,9 +6,12 @@ import com.bank.repository.AccountRepository;
 import com.bank.repository.BankRepository;
 import com.bank.repository.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class BankService {
@@ -22,10 +25,21 @@ public class BankService {
     }
 
     public Bank createBank(Bank bank) {
-        return bankRepository.save(bank);
+        if (Objects.isNull(bank.getName()) || Objects.isNull(bank.getCountryCode())) return null;
+
+        Bank updateBank = getBank(bank.getName());
+        if (Objects.isNull(updateBank)) bankRepository.save(bank);
+
+        updateBank.setName(bank.getName());
+        updateBank.setCountryCode(bank.getCountryCode());
+        return bankRepository.save(updateBank);
     }
 
     public List<Bank> getAllBanks() {
         return bankRepository.findAll();
+    }
+
+    public Bank getBank(String bankName) {
+        return bankRepository.findByBank(bankName);
     }
 }

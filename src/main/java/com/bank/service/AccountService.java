@@ -48,7 +48,7 @@ public class AccountService {
         if (Objects.isNull(account.getIdentificationNumber()) || Objects.isNull(account.getAccountNumber()) || Objects.isNull(account.getBankId()))
             return null;
 
-        Account updateAccount = (Account) getAccount(account.getBankId(), AccountFilterType.ACCOUNT_NUMBER, account.getAccountNumber());
+        Account updateAccount = getAccount(account.getBankId(), AccountFilterType.ACCOUNT_NUMBER, account.getAccountNumber());
         if (Objects.isNull(updateAccount)) return accountRepository.save(account);
 
         updateAccount.setBankId(account.getBankId());

@@ -27,11 +27,15 @@ public class TransactionService {
     private AccountService accountService;
 
     public List<Transaction> getTransactionHistory(TransactionType type, Long accountNumber) {
+        if (Objects.isNull(accountNumber)) return null;
+
         int typeValue = Objects.isNull(type) ? -1 : type.getValue();
         return transactionRepository.findByAccountNumber(typeValue, accountNumber);
     }
 
     public Account depositMoney(Long bankId, AccountFilterType accountType, Long filterValue, double amount) {
+        if (Objects.isNull(bankId) || Objects.isNull(accountType) || Objects.isNull(filterValue)) return null;
+
         Account account = accountService.getAccount(bankId, accountType, filterValue);
 
         if (!Objects.isNull(account)) {
@@ -52,6 +56,8 @@ public class TransactionService {
     }
 
     public Account withdrawMoney(Long bankId, AccountFilterType accountType, Long filterValue, double amount) {
+        if (Objects.isNull(bankId) || Objects.isNull(accountType) || Objects.isNull(filterValue)) return null;
+
         Account account = accountService.getAccount(bankId, accountType, filterValue);
 
         if (!Objects.isNull(account) && account.getBalance() >= amount) {

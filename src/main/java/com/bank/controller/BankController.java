@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/api/bank")
@@ -24,7 +25,11 @@ public class BankController {
     }
 
     @PostMapping("/create-bank")
-    public ResponseEntity<Bank> createBank(@RequestBody Bank bank) {
+    public ResponseEntity<?> createBank(@RequestBody Bank bank) {
+        if (Objects.isNull(bank.getName()) || Objects.isNull(bank.getCountryCode())) {
+            String errorMessage = "Bank Name, and Country Code must not be null.";
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessage);
+        }
         Bank createBank = bankService.createBank(bank);
         return new ResponseEntity<>(createBank, HttpStatus.CREATED);
     }
