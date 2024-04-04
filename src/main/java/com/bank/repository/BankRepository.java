@@ -1,6 +1,5 @@
 package com.bank.repository;
 
-import com.bank.entities.AccountOwner;
 import com.bank.entities.Bank;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

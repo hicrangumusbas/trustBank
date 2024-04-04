@@ -3,18 +3,11 @@ package com.bank.service;
 import com.bank.entities.Account;
 import com.bank.enumeration.AccountFilterType;
 import com.bank.repository.AccountRepository;
-import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import java.awt.print.Pageable;
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
-import java.util.function.Supplier;
 
 @Service
 public class AccountService {

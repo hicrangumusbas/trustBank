@@ -1,10 +1,7 @@
 package com.bank.service;
 
-import com.bank.entities.Account;
 import com.bank.entities.AccountOwner;
-import com.bank.enumeration.AccountFilterType;
 import com.bank.repository.AccountOwnerRepository;
-import com.bank.repository.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +10,7 @@ import java.util.Objects;
 
 @Service
 public class AccountOwnerService {
+
     @Autowired
     private AccountOwnerRepository accountOwnerRepository;
 

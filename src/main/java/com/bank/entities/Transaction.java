@@ -1,8 +1,5 @@
 package com.bank.entities;
 
-import java.util.Date;
-
-import com.bank.enumeration.TransactionType;
 import lombok.Getter;
 import lombok.Setter;
 
