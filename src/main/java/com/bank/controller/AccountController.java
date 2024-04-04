@@ -19,7 +19,7 @@ public class AccountController {
     private IAccountService accountService;
 
     @GetMapping("/account")
-    public ResponseEntity<?> getAccount(@RequestParam AccountFilterDTO filter) {
+    public ResponseEntity<?> getAccount(@RequestBody AccountFilterDTO filter) {
         if (Objects.isNull(filter) ){
             String errorMessage = "Bank Id, Account Type, and Filter Value must not be null.";
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessage);
@@ -30,7 +30,7 @@ public class AccountController {
     }
 
     @GetMapping("/owner-accounts")
-    public ResponseEntity<?> getOwnerAccounts(@RequestParam AccountFilterDTO filter) {
+    public ResponseEntity<?> getOwnerAccounts(@RequestBody AccountFilterDTO filter) {
         if (Objects.isNull(filter)) {
             String errorMessage = "Account Type, and Filter Value must not be null.";
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessage);

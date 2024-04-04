@@ -20,13 +20,13 @@ public class TransactionController {
     private ITransactionService transactionService;
 
     @GetMapping("/transaction-history")
-    public ResponseEntity<List<Transaction>> transactionHistory(@RequestParam TransactionFilterDTO filter) {
+    public ResponseEntity<List<Transaction>> transactionHistory(@RequestBody TransactionFilterDTO filter) {
         List<Transaction> transactionRepositorys = transactionService.getTransactionHistory(filter);
         return new ResponseEntity<>(transactionRepositorys, HttpStatus.OK);
     }
 
     @PostMapping("/deposit")
-    public ResponseEntity<?> depositToAccount(@RequestParam TransactionFilterDTO filter){
+    public ResponseEntity<?> depositToAccount(@RequestBody TransactionFilterDTO filter){
         if (Objects.isNull(filter)) {
             String errorMessage = "Bank Id, Account Type, and Filter Value must not be null.";
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessage);
@@ -37,7 +37,7 @@ public class TransactionController {
     }
 
     @PostMapping("/withdraw")
-    public ResponseEntity<?> withdrawToAccount(@RequestParam TransactionFilterDTO filter){
+    public ResponseEntity<?> withdrawToAccount(@RequestBody TransactionFilterDTO filter){
         if (Objects.isNull(filter)) {
             String errorMessage = "Bank Id, Account Type, and Filter Value must not be null.";
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessage);

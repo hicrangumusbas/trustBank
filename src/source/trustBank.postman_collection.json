@@ -15,7 +15,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/api/bankService/baks",
+							"raw": "http://localhost:8080/api/bankService/banks",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -24,7 +24,7 @@
 							"path": [
 								"api",
 								"bankService",
-								"baks"
+								"banks"
 							]
 						}
 					},
@@ -37,7 +37,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"TestBank\",\r\n    \"countryCode\": \"US\"\r\n}",
+							"raw": "{\r\n    \"name\": \"Test\",\r\n    \"countryCode\": \"US\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -96,7 +96,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "",
+							"raw": "{\r\n    \"bankId\": 3,\r\n    \"accountNumber\": 3333333333\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -104,7 +104,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/api/accountService/account?bankId=2&accountType=ACCOUNT_NUMBER&filterValue=12341236789",
+							"raw": "http://localhost:8080/api/accountService/account",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -114,20 +114,6 @@
 								"api",
 								"accountService",
 								"account"
-							],
-							"query": [
-								{
-									"key": "bankId",
-									"value": "2"
-								},
-								{
-									"key": "accountType",
-									"value": "ACCOUNT_NUMBER"
-								},
-								{
-									"key": "filterValue",
-									"value": "12341236789"
-								}
 							]
 						}
 					},
@@ -143,7 +129,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "",
+							"raw": "{\r\n    \"bankId\": 3,\r\n    \"accountNumber\": 3333333333\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -151,7 +137,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/api/accountService/owner-accounts?accountType=IDENTIFICATION_NUMBER&filterValue=10308145519",
+							"raw": "http://localhost:8080/api/accountService/owner-accounts",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -161,16 +147,6 @@
 								"api",
 								"accountService",
 								"owner-accounts"
-							],
-							"query": [
-								{
-									"key": "accountType",
-									"value": "IDENTIFICATION_NUMBER"
-								},
-								{
-									"key": "filterValue",
-									"value": "10308145519"
-								}
 							]
 						}
 					},
@@ -183,7 +159,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"bankId\": 2,\r\n    \"accountNumber\": 12341236789,\r\n    \"identificationNumber\": 98712354321,\r\n    \"balance\": 1144.9\r\n}",
+							"raw": "{\r\n    \"bankId\": 2,\r\n    \"accountNumber\": 12341236789,\r\n    \"identificationNumber\": 98712354321,\r\n    \"balance\": 1154.9\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -324,9 +300,21 @@
 			"item": [
 				{
 					"name": "getTransactionHistory()",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
 					"request": {
 						"method": "GET",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"bankId\": 3,\r\n    \"accountNumber\": 3333333333,\r\n    \"transactionType\": 2\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
 							"raw": "http://localhost:8080/api/transactionService/transaction-history?transactionType=ALL&filterValue=9876543218",
 							"protocol": "http",
@@ -360,7 +348,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "",
+							"raw": "{\r\n    \"bankId\": 3,\r\n    \"accountNumber\": 3333333333,\r\n    \"amount\": 30\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -368,7 +356,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/api/transactionService/deposit?bankId=1&accountType=IDENTIFICATION_NUMBER&filterValue=10308145519&amount=500.9",
+							"raw": "http://localhost:8080/api/transactionService/deposit",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -378,24 +366,6 @@
 								"api",
 								"transactionService",
 								"deposit"
-							],
-							"query": [
-								{
-									"key": "bankId",
-									"value": "1"
-								},
-								{
-									"key": "accountType",
-									"value": "IDENTIFICATION_NUMBER"
-								},
-								{
-									"key": "filterValue",
-									"value": "10308145519"
-								},
-								{
-									"key": "amount",
-									"value": "500.9"
-								}
 							]
 						}
 					},
@@ -406,8 +376,17 @@
 					"request": {
 						"method": "POST",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"bankId\": 3,\r\n    \"accountNumber\": 3333333333,\r\n    \"amount\": 30\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
-							"raw": "http://localhost:8080/api/transactionService/withdraw?bankId=1&accountType=IDENTIFICATION_NUMBER&filterValue=10308145519&amount=500.9",
+							"raw": "http://localhost:8080/api/transactionService/withdraw",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -417,24 +396,6 @@
 								"api",
 								"transactionService",
 								"withdraw"
-							],
-							"query": [
-								{
-									"key": "bankId",
-									"value": "1"
-								},
-								{
-									"key": "accountType",
-									"value": "IDENTIFICATION_NUMBER"
-								},
-								{
-									"key": "filterValue",
-									"value": "10308145519"
-								},
-								{
-									"key": "amount",
-									"value": "500.9"
-								}
 							]
 						}
 					},
