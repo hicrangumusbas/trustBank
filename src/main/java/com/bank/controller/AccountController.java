@@ -1,7 +1,7 @@
 package com.bank.controller;
 
 import com.bank.entities.Account;
-import com.bank.enumeration.AccountFilterType;
+import com.bank.model.AccountFilterDTO;
 import com.bank.service.IAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,26 +19,24 @@ public class AccountController {
     private IAccountService accountService;
 
     @GetMapping("/account")
-    public ResponseEntity<?> getAccount(@RequestParam Long bankId, @RequestParam String accountType, @RequestParam Long filterValue) {
-        if (Objects.isNull(bankId) || Objects.isNull(accountType) || Objects.isNull(filterValue)) {
+    public ResponseEntity<?> getAccount(@RequestParam AccountFilterDTO filter) {
+        if (Objects.isNull(filter) ){
             String errorMessage = "Bank Id, Account Type, and Filter Value must not be null.";
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessage);
         }
 
-        AccountFilterType type = AccountFilterType.valueOf(accountType);
-        Account account = accountService.getAccount(bankId, type, filterValue);
+        Account account = accountService.getAccount(filter);
         return new ResponseEntity<>(account, HttpStatus.OK);
     }
 
     @GetMapping("/owner-accounts")
-    public ResponseEntity<?> getOwnerAccounts(@RequestParam String accountType, @RequestParam Long filterValue) {
-        if (Objects.isNull(accountType) || Objects.isNull(filterValue)) {
+    public ResponseEntity<?> getOwnerAccounts(@RequestParam AccountFilterDTO filter) {
+        if (Objects.isNull(filter)) {
             String errorMessage = "Account Type, and Filter Value must not be null.";
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessage);
         }
 
-        AccountFilterType type = AccountFilterType.valueOf(accountType);
-        List<Account> accounts = accountService.getOwnerAccounts(type, filterValue);
+        List<Account> accounts = accountService.getOwnerAccounts(filter);
         return new ResponseEntity<>(accounts, HttpStatus.OK);
     }
 
@@ -50,7 +48,9 @@ public class AccountController {
 
     @PostMapping("/create-account")
     public ResponseEntity<?> createAccount(@RequestBody Account account) {
-        if (Objects.isNull(account.getIdentificationNumber()) || Objects.isNull(account.getAccountNumber()) || Objects.isNull(account.getBankId())) {
+        if (Objects.isNull(account.getIdentificationNumber())
+                || Objects.isNull(account.getAccountNumber())
+                || Objects.isNull(account.getBankId())) {
             String errorMessage = "Identification Number, Account Number, and Bank ID must not be null.";
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessage);
         }

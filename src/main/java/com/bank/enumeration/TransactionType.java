@@ -6,14 +6,15 @@ public enum TransactionType {
     WITHDRAW("Para Çekme", 2);
 
     private final String type;
-    private final int value;
+    private final Integer value;
 
     TransactionType(String type, int value) {
         this.type = type;
         this.value = value;
     }
 
-    public int getValue() {
+    public Integer getValue() {
         return value;
     }
+
 }

@@ -2,8 +2,8 @@ package com.bank.service.impl;
 
 import com.bank.entities.Account;
 import com.bank.entities.Transaction;
-import com.bank.enumeration.AccountFilterType;
 import com.bank.enumeration.TransactionType;
+import com.bank.model.TransactionFilterDTO;
 import com.bank.repository.AccountRepository;
 import com.bank.repository.TransactionRepository;
 import com.bank.service.IAccountService;
@@ -12,6 +12,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import java.util.List;
 import java.util.Objects;
 
@@ -23,43 +28,32 @@ public class TransactionService implements ITransactionService {
     private TransactionRepository transactionRepository;
 
     @Autowired
+    EntityManager entityManager;
+
+    @Autowired
     private AccountRepository accountRepository;
 
     @Autowired
     private IAccountService accountService;
 
     @Override
-    public List<Transaction> getTransactionHistory(TransactionType type, Long accountNumber) {
-        if (Objects.isNull(accountNumber)) return null;
-
-        int typeValue = Objects.isNull(type) ? -1 : type.getValue();
-        return transactionRepository.findByAccountNumber(typeValue, accountNumber);
+    public List<Transaction> getTransactionHistory(TransactionFilterDTO transaction) {
+        return findTransactionByFilter(transaction);
     }
 
     @Override
-    public Account depositMoney(Long bankId, AccountFilterType accountType, Long filterValue, double amount) {
-        if (Objects.isNull(bankId) || Objects.isNull(accountType) || Objects.isNull(filterValue)) return null;
+    public Account transaction(TransactionFilterDTO transaction, Boolean deposit) {
+        if (Objects.isNull(transaction) || transaction.isNullFieldExist()) return null;
 
-        Account account = accountService.getAccount(bankId, accountType, filterValue);
-        if (!Objects.isNull(account)) return transaction(account, amount, true);
-        return null;
-    }
-
-    @Override
-    public Account withdrawMoney(Long bankId, AccountFilterType accountType, Long filterValue, double amount) {
-        if (Objects.isNull(bankId) || Objects.isNull(accountType) || Objects.isNull(filterValue)) return null;
-
-        Account account = accountService.getAccount(bankId, accountType, filterValue);
-        if (!Objects.isNull(account)) {
-            if (account.getBalance() < amount)
-                throw new ArithmeticException("There is not enough money in your account.");
-
-            return transaction(account, amount, false);
-        }
+        Account account = accountService.getAccount(TransactionFilterDTO.fromAccount(transaction));
+        if (!Objects.isNull(account)) return transaction(account, transaction.getAmount(), deposit);
         return null;
     }
 
     private Account transaction(Account account, double amount, Boolean deposit) {
+        if (!deposit && account.getBalance() < amount)
+            throw new ArithmeticException("There is not enough money in your account.");
+
         Transaction transaction = new Transaction();
         transaction.setAccountNumber(account.getAccountNumber());
         transaction.setAmount(amount);
@@ -75,4 +69,21 @@ public class TransactionService implements ITransactionService {
         }
         return accountRepository.save(account);
     }
-}
+
+
+    List<Transaction> findTransactionByFilter(TransactionFilterDTO transaction) {
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Transaction> criteriaQuery = criteriaBuilder.createQuery(Transaction.class);
+        Root<Transaction> transactionRoot = criteriaQuery.from(Transaction.class);
+
+        Predicate bankIdPredicate = criteriaBuilder.equal(transactionRoot.get("accountNumber"), transaction.getAccountNumber());
+        Predicate filterPredicate = null;
+
+        if (TransactionType.DEPOSIT.getValue().equals(transaction.getTransactionType()) ||
+                TransactionType.WITHDRAW.getValue().equals(transaction.getTransactionType()))
+            filterPredicate = criteriaBuilder.equal(transactionRoot.get("transactionType"), transaction.getTransactionType());
+
+        Predicate finalPredicate = criteriaBuilder.and(bankIdPredicate, filterPredicate);
+        criteriaQuery.select(transactionRoot).where(finalPredicate);
+        return entityManager.createQuery(criteriaQuery).getResultList();
+    }}

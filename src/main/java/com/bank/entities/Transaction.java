@@ -16,7 +16,7 @@ public class Transaction {
 
     private Long accountNumber;
     private Long transactionDate;
-    private double amount;
+    private Double amount;
     private int transactionType;
     private boolean success;
 

@@ -2,10 +2,9 @@ package com.bank.service;
 
 import com.bank.entities.Account;
 import com.bank.entities.Transaction;
-import com.bank.enumeration.AccountFilterType;
 import com.bank.enumeration.TransactionType;
-import com.bank.service.impl.AccountService;
-import com.bank.service.impl.TransactionService;
+import com.bank.model.AccountFilterDTO;
+import com.bank.model.TransactionFilterDTO;
 import com.bank.util.ConcurrentManager;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -28,11 +27,11 @@ public class TransactionServiceIntegrationTest {
     @Test
     @DirtiesContext
     void transactionHistory() {
-        Account account = accountService.getAccount(2L,AccountFilterType.ID,2L);
-        if(Objects.isNull(account)) return;
+        Account account = accountService.getAccount(new AccountFilterDTO(3L, 3333333333L));
+        if (Objects.isNull(account)) return;
 
-        List<Transaction> transactionsAll = transactionService.getTransactionHistory(TransactionType.ALL, account.getAccountNumber());
-        List<Transaction> transactionsFilter = transactionService.getTransactionHistory(TransactionType.DEPOSIT, account.getAccountNumber());
+        List<Transaction> transactionsAll = transactionService.getTransactionHistory(new TransactionFilterDTO(null, account.getAccountNumber(), null, TransactionType.ALL.getValue()));
+        List<Transaction> transactionsFilter = transactionService.getTransactionHistory(new TransactionFilterDTO(null, account.getAccountNumber(), null, TransactionType.DEPOSIT.getValue()));
         Assertions.assertNotNull(transactionsAll);
         Assertions.assertNotNull(transactionsFilter);
     }
@@ -48,11 +47,12 @@ public class TransactionServiceIntegrationTest {
 
         // Account savedAccount = accountService.createAccount(newAccount);
 
-        Account account = accountService.getAccount(2L, AccountFilterType.ID,2L);
-        if(Objects.isNull(account)) return;
+        Account account = accountService.getAccount(new AccountFilterDTO(3L, 3333333333L));
+        if (Objects.isNull(account)) return;
 
         double depositAmount = 1500.0;
-        Account updatedAccount = transactionService.depositMoney(account.getBankId(), AccountFilterType.ID,account.getId(), depositAmount);
+        Account updatedAccount = transactionService.transaction(new
+                TransactionFilterDTO(account.getBankId(), account.getAccountNumber(), depositAmount, TransactionType.ALL.getValue()), true);
 
         Assertions.assertNotNull(updatedAccount);
         Assertions.assertEquals(account.getBalance() + depositAmount, updatedAccount.getBalance());
@@ -69,14 +69,15 @@ public class TransactionServiceIntegrationTest {
 
         // Account savedAccount = accountService.createAccount(newAccount);
 
-        Account account = accountService.getAccount(2L, AccountFilterType.ID,2L);
-        if(Objects.isNull(account)) return;
+        Account account = accountService.getAccount(new AccountFilterDTO(3L, 3333333333L));
+        if (Objects.isNull(account)) return;
 
-        double withdrawAmount = 600.0;
+        double withdrawAmount = 50.0;
         if (account.getBalance() < withdrawAmount)
             throw new ArithmeticException("There is not enough money in your account.");
 
-        Account updatedAccount = transactionService.withdrawMoney(account.getBankId(), AccountFilterType.ID,account.getId(), withdrawAmount);
+        Account updatedAccount = transactionService.transaction(new
+                TransactionFilterDTO(account.getBankId(), account.getAccountNumber(), withdrawAmount, TransactionType.ALL.getValue()), false);
 
         Assertions.assertNotNull(updatedAccount);
         Assertions.assertEquals(account.getBalance() - withdrawAmount, updatedAccount.getBalance());
@@ -85,7 +86,7 @@ public class TransactionServiceIntegrationTest {
     @Test
     @DirtiesContext
     void depositMoneyTestAsync() throws InterruptedException {
-        Account account = accountService.getAccount(2L, AccountFilterType.ID, 2L);
+        Account account = accountService.getAccount(new AccountFilterDTO(3L, 3333333333L));
         if (Objects.isNull(account)) return;
 
         double depositAmount = 1500.0;
@@ -93,12 +94,12 @@ public class TransactionServiceIntegrationTest {
 
         ConcurrentManager concurrentManager = new ConcurrentManager();
         concurrentManager.processConcurrently(threadCount, () -> {
-            System.out.println(threadCount);
-            transactionService.depositMoney(account.getBankId(), AccountFilterType.ID, account.getId(), depositAmount);
+            transactionService.transaction(new
+                    TransactionFilterDTO(account.getBankId(), account.getAccountNumber(), depositAmount, TransactionType.ALL.getValue()), true);
         });
 
         double expectedBalance = account.getBalance() + (depositAmount * threadCount);
-        Account finalAccount = accountService.getAccount(account.getBankId(), AccountFilterType.ID, account.getId());
+        Account finalAccount = accountService.getAccount(new AccountFilterDTO(account.getBankId(), account.getAccountNumber()));
         Assertions.assertNotNull(finalAccount);
         Assertions.assertEquals(expectedBalance, finalAccount.getBalance());
     }

@@ -2,17 +2,14 @@ package com.bank.service;
 
 import com.bank.entities.Account;
 import com.bank.entities.Transaction;
-import com.bank.enumeration.AccountFilterType;
-import com.bank.enumeration.TransactionType;
+import com.bank.model.TransactionFilterDTO;
 
 import java.util.List;
 
 public interface ITransactionService {
 
-    List<Transaction> getTransactionHistory(TransactionType type, Long accountNumber);
+    List<Transaction> getTransactionHistory(TransactionFilterDTO transaction);
 
-    Account depositMoney(Long bankId, AccountFilterType accountType, Long filterValue, double amount);
-
-    Account withdrawMoney(Long bankId, AccountFilterType accountType, Long filterValue, double amount);
+    Account transaction(TransactionFilterDTO transaction, Boolean deposit);
 
 }

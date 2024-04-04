@@ -2,10 +2,9 @@ package com.bank.service;
 
 import com.bank.entities.Account;
 import com.bank.entities.Transaction;
-import com.bank.enumeration.AccountFilterType;
 import com.bank.enumeration.TransactionType;
-import com.bank.service.impl.AccountService;
-import com.bank.service.impl.TransactionService;
+import com.bank.model.AccountFilterDTO;
+import com.bank.model.TransactionFilterDTO;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +26,7 @@ class AccountServiceIntegrationTest {
     @Test
     @DirtiesContext
     void Account() {
-        Account account = accountService.getAccount(1L, AccountFilterType.ID,2L);
+        Account account = accountService.getAccount(new AccountFilterDTO(3L,3333333333L));
         Assertions.assertNotNull(account);
     }
 
@@ -41,11 +40,11 @@ class AccountServiceIntegrationTest {
     @Test
     @DirtiesContext
     void transactionHistory() {
-        Account account = accountService.getAccount(2L, AccountFilterType.ID,2L);
+        Account account = accountService.getAccount(new AccountFilterDTO(3L,3333333333L));
         if(Objects.isNull(account)) return;
 
-        List<Transaction> transactionsAll = transactionService.getTransactionHistory(TransactionType.ALL, account.getAccountNumber());
-        List<Transaction> transactionsFilter = transactionService.getTransactionHistory(TransactionType.DEPOSIT, account.getAccountNumber());
+        List<Transaction> transactionsAll = transactionService.getTransactionHistory(new TransactionFilterDTO(null, account.getAccountNumber(), null, TransactionType.ALL.getValue()));
+        List<Transaction> transactionsFilter = transactionService.getTransactionHistory(new TransactionFilterDTO(null, account.getAccountNumber(), null, TransactionType.DEPOSIT.getValue()));
         Assertions.assertNotNull(transactionsAll);
         Assertions.assertNotNull(transactionsFilter);
     }
@@ -63,7 +62,7 @@ class AccountServiceIntegrationTest {
 
         Assertions.assertNotNull(savedAccount.getId());
 
-        Account retrievedAccount = accountService.getAccount(savedAccount.getBankId(), AccountFilterType.ID,savedAccount.getId());
+        Account retrievedAccount = accountService.getAccount(new AccountFilterDTO(savedAccount.getBankId(), savedAccount.getAccountNumber()));
         Assertions.assertEquals(newAccount.getBankId(), retrievedAccount.getBankId());
         Assertions.assertEquals(newAccount.getAccountNumber(), retrievedAccount.getAccountNumber());
         Assertions.assertEquals(newAccount.getIdentificationNumber(), retrievedAccount.getIdentificationNumber());
@@ -73,7 +72,7 @@ class AccountServiceIntegrationTest {
     @Test
     @DirtiesContext
     void checkBalanceTest() {
-        Account account = accountService.getAccount(2L, AccountFilterType.ID,6L);
+        Account account = accountService.getAccount(new AccountFilterDTO(3L,3333333333L));
         if(Objects.isNull(account)) return;
 
         Double balance = accountService.checkBalance(account.getId());
