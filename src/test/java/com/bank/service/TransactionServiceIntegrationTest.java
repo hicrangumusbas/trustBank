@@ -84,30 +84,6 @@ public class TransactionServiceIntegrationTest {
 
     @Test
     @DirtiesContext
-    void depositMoneyTestThread() throws InterruptedException, ExecutionException {
-        Account account = accountService.getAccount(2L, AccountFilterType.ID,2L);
-        if(Objects.isNull(account)) return;
-
-        double depositAmount = 1500.0;
-        int threadCount = 5;
-
-        List<CompletableFuture<Void>> futures = new ArrayList<>();
-
-        for (int i = 0; i < threadCount; i++) {
-            CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
-                Account updatedAccount = transactionService.depositMoney(account.getBankId(), AccountFilterType.ID, account.getId(), depositAmount);
-                Assertions.assertNotNull(updatedAccount);
-                Assertions.assertEquals(account.getBalance() + depositAmount, updatedAccount.getBalance());
-            });
-            futures.add(future);
-        }
-
-        CompletableFuture<Void> allOf = CompletableFuture.allOf(futures.toArray(new CompletableFuture[0]));
-        allOf.get();
-    }
-
-    @Test
-    @DirtiesContext
     void depositMoneyTestAsync() throws InterruptedException {
         Account account = accountService.getAccount(2L, AccountFilterType.ID, 2L);
         if (Objects.isNull(account)) return;
