@@ -37,19 +37,10 @@ public class TransactionService {
         if (Objects.isNull(bankId) || Objects.isNull(accountType) || Objects.isNull(filterValue)) return null;
 
         Account account = accountService.getAccount(bankId, accountType, filterValue);
-
         if (!Objects.isNull(account)) {
             synchronized (account) {
-                Transaction transaction = new Transaction();
-                transaction.setAccountNumber(account.getAccountNumber());
-                transaction.setAmount(amount);
-                transaction.setTransactionDate(System.currentTimeMillis());
-                transaction.setTransactionType(TransactionType.DEPOSIT.getValue());
-
-                transactionRepository.save(transaction);
-
-                account.setBalance(account.getBalance() + amount);
-                return accountRepository.save(account);
+                account = accountRepository.getById(account.getId());
+                return transaction(account, amount, true);
             }
         }
         return null;
@@ -59,21 +50,31 @@ public class TransactionService {
         if (Objects.isNull(bankId) || Objects.isNull(accountType) || Objects.isNull(filterValue)) return null;
 
         Account account = accountService.getAccount(bankId, accountType, filterValue);
+        if (!Objects.isNull(account)) {
+            if (account.getBalance() < amount)
+                throw new ArithmeticException("There is not enough money in your account.");
 
-        if (!Objects.isNull(account) && account.getBalance() >= amount) {
             synchronized (account) {
-                Transaction transaction = new Transaction();
-                transaction.setAccountNumber(account.getAccountNumber());
-                transaction.setAmount(amount);
-                transaction.setTransactionDate(System.currentTimeMillis());
-                transaction.setTransactionType(TransactionType.WITHDRAW.getValue());
-
-                transactionRepository.save(transaction);
-
-                account.setBalance(account.getBalance() - amount);
-                return accountRepository.save(account);
+                account = accountRepository.getById(account.getId());
+                return transaction(account, amount, false);
             }
         }
         return null;
+    }
+
+    private Account transaction(Account account, double amount, Boolean deposit) {
+        Transaction transaction = new Transaction();
+        transaction.setAccountNumber(account.getAccountNumber());
+        transaction.setAmount(amount);
+        transaction.setTransactionDate(System.currentTimeMillis());
+        transaction.setTransactionType(deposit ? TransactionType.DEPOSIT.getValue() : TransactionType.WITHDRAW.getValue());
+        transaction.setSuccess(true);
+        transactionRepository.save(transaction);
+
+        synchronized (account) {
+            if (deposit) account.setBalance(account.getBalance() + amount);
+            else account.setBalance(account.getBalance() - amount);
+            return accountRepository.save(account);
+        }
     }
 }

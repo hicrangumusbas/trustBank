@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Objects;
 
 @RestController
-@RequestMapping("/api/transaction")
+@RequestMapping("/api/transactionService")
 public class TransactionController {
 
     @Autowired

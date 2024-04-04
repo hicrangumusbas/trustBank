@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Objects;
 
 @RestController
-@RequestMapping("/api/owner")
+@RequestMapping("/api/ownerService")
 public class OwnerController {
 
     @Autowired
@@ -23,7 +23,7 @@ public class OwnerController {
             String errorMessage = "Identification Number must not be null.";
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessage);
         }
-        
+
         AccountOwner account = accountOwnerService.getAccountOwner(identificationNumber);
         return new ResponseEntity<>(account, HttpStatus.OK);
     }

@@ -4,14 +4,17 @@ import com.bank.entities.Account;
 import com.bank.entities.Transaction;
 import com.bank.enumeration.AccountFilterType;
 import com.bank.enumeration.TransactionType;
+import com.bank.util.ConcurrentManager;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.*;
 
 @SpringBootTest
 public class TransactionServiceIntegrationTest {
@@ -57,7 +60,7 @@ public class TransactionServiceIntegrationTest {
 
     @Test
     @DirtiesContext
-    void withdrawMoneyTest() {
+    void withdrawMoneyTest() throws Exception {
         // Account newAccount = new Account();
         // newAccount.setBankId(2L);
         // newAccount.setAccountNumber(123456789L);
@@ -70,10 +73,56 @@ public class TransactionServiceIntegrationTest {
         if(Objects.isNull(account)) return;
 
         double withdrawAmount = 600.0;
+        if (account.getBalance() < withdrawAmount)
+            throw new ArithmeticException("There is not enough money in your account.");
+
         Account updatedAccount = transactionService.withdrawMoney(account.getBankId(), AccountFilterType.ID,account.getId(), withdrawAmount);
 
         Assertions.assertNotNull(updatedAccount);
         Assertions.assertEquals(account.getBalance() - withdrawAmount, updatedAccount.getBalance());
     }
 
+    @Test
+    @DirtiesContext
+    void depositMoneyTestThread() throws InterruptedException, ExecutionException {
+        Account account = accountService.getAccount(2L, AccountFilterType.ID,2L);
+        if(Objects.isNull(account)) return;
+
+        double depositAmount = 1500.0;
+        int threadCount = 5;
+
+        List<CompletableFuture<Void>> futures = new ArrayList<>();
+
+        for (int i = 0; i < threadCount; i++) {
+            CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
+                Account updatedAccount = transactionService.depositMoney(account.getBankId(), AccountFilterType.ID, account.getId(), depositAmount);
+                Assertions.assertNotNull(updatedAccount);
+                Assertions.assertEquals(account.getBalance() + depositAmount, updatedAccount.getBalance());
+            });
+            futures.add(future);
+        }
+
+        CompletableFuture<Void> allOf = CompletableFuture.allOf(futures.toArray(new CompletableFuture[0]));
+        allOf.get();
+    }
+    @Test
+    @DirtiesContext
+    void depositMoneyTestAsync() throws InterruptedException {
+        Account account = accountService.getAccount(2L, AccountFilterType.ID, 2L);
+        if (Objects.isNull(account)) return;
+
+        double depositAmount = 1500.0;
+        int threadCount = 5;
+
+        ConcurrentManager concurrentManager = new ConcurrentManager();
+        concurrentManager.processConcurrently(threadCount, () -> {
+            System.out.println(threadCount);
+            transactionService.depositMoney(account.getBankId(), AccountFilterType.ID, account.getId(), depositAmount);
+        });
+
+        double expectedBalance = account.getBalance() + (depositAmount * threadCount);
+        Account finalAccount = accountService.getAccount(account.getBankId(), AccountFilterType.ID, account.getId());
+        Assertions.assertNotNull(finalAccount);
+        Assertions.assertEquals(expectedBalance, finalAccount.getBalance());
+    }
 }
